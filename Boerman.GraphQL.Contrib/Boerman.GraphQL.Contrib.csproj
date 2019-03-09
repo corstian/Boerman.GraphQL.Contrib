@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Corstian Boerman</Authors>
+    <Company>The Boerman Company</Company>
+    <Description>Library containing some helper methods for GraphQL apis. Includes data-loaders and (cursor based) pagination helper methods.</Description>
+    <RepositoryUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GraphQL" Version="2.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.2" />
+    <PackageReference Include="SqlKata.Execution" Version="1.1.7" />
+  </ItemGroup>
+
+</Project>
