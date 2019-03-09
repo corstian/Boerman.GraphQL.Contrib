@@ -67,3 +67,6 @@ This library has quite a few dependencies. This comes from my own workflow where
 ## Further content
 All of this functionality has been documented over the course of several blog posts:
 
+- [Implementing pagination with GraphQL.NET and Relay](http://corstianboerman.com/2019-03-08/implementing-pagination-with-graphql-net-and-relay.html)
+- [Cursor based pagination with SQL Server using C# (and SQL)](http://corstianboerman.com/2019-03-06/cursor-based-pagination-with-sql-server.html)
+- [Generic data loaders for Entity Framework in GraphQL](http://corstianboerman.com/posts/2019-02-12/generic-data-loaders-for-entity-framework-in-graphql.html)
