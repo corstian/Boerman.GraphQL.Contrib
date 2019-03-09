@@ -59,7 +59,17 @@ List<Flight> flights = await dataLoader.EntityCollectionLoader(
 ```
 
 ## Installation
-You can copy some specific code over from this repository or you can install the whole package via NuGet.
+You can copy some specific code over from this repository or you can install the whole package via [NuGet](https://www.nuget.org/packages/Boerman.GraphQL.Contrib/).
+
+```
+Install-Package Boerman.GraphQL.Contrib
+```
+
+or 
+
+```
+dotnet add package Boerman.GraphQL.Contrib
+```
 
 ## Dependencies
 This library has quite a few dependencies. This comes from my own workflow where I start using Entity Framework, and use SqlKata for some specialized logic. Because Entity Framework acts as my base I also reuse the data models with SqlKata.
