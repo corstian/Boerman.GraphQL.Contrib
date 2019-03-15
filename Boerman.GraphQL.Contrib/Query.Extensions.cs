@@ -129,6 +129,8 @@ namespace Boerman.GraphQL.Contrib
 
             if (totalCount == 0) return new Connection<T>();
 
+            if (!xQuery.Clauses.Any(q => q.Component == "select")) xQuery.Select("*");
+
             var statement = xQuery.Compiler.Compile(
                 xQuery.Slice(
                     context.After?.FromCursor().ToString(),
