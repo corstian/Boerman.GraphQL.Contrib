@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Boerman.GraphQL.Contrib
@@ -107,8 +108,9 @@ namespace Boerman.GraphQL.Contrib
         public static async Task<Connection<T>> ToConnection<T, TSource>(
             this Query query,
             ResolveConnectionContext<TSource> context,
+            Func<T, string> cursorSelector,
             string cursorField = "Id")
-            where T : class, IId
+            where T : class
             where TSource : class
         {
             var xQuery = query as XQuery;
@@ -156,7 +158,7 @@ namespace Boerman.GraphQL.Contrib
                     .Select(q => new Edge<T>
                     {
                         Node = q.Value,
-                        Cursor = q.Value?.Id.ToCursor()
+                        Cursor = cursorSelector.Invoke(q.Value)
                     })
                     .ToList(),
                 TotalCount = totalCount,
@@ -173,6 +175,16 @@ namespace Boerman.GraphQL.Contrib
             return connection;
         }
 
+        public static async Task<Connection<T>> ToConnection<T, TSource>(
+            this Query query,
+            ResolveConnectionContext<TSource> context,
+            string cursorField = "Id")
+            where T : class, IId
+            where TSource : class
+        {
+            return await query.ToConnection<T, TSource>(context, q => q.Id.ToCursor());
+        }
+        
         public static Query LeftJoinAs(this Query query, string table, string alias, string first, string second, string op = "=")
         {
             return query.LeftJoin(new Query(table).As(alias), q => q.On(first, second, op));
