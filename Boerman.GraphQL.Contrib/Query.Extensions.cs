@@ -42,6 +42,8 @@ namespace Boerman.GraphQL.Contrib
 
             var internalQuery = new Query()
                 .With("q", queryClone)
+                .Select("*")
+                .SelectRaw("(SELECT COUNT(*) FROM [q]) AS [RowCount]")
                 .From("q");
 
             // Select all rows after provided cursor
@@ -117,22 +119,22 @@ namespace Boerman.GraphQL.Contrib
 
             if (xQuery == null) throw new ArgumentException("Make sure the query object is instantiated from a queryFactory", nameof(query));
 
-            var countQuery = xQuery.Clone();
+            //var countQuery = xQuery.Clone();
 
-            countQuery
-                .Clauses
-                .RemoveAll(q => q.Component == "select"
-                             || q.Component == "order");
+            //countQuery
+            //    .Clauses
+            //    .RemoveAll(q => q.Component == "select"
+            //                 || q.Component == "order");
 
-            var totalCount = (await countQuery
-                .SelectRaw("COUNT(*)")
-                .GetAsync<int>())
-                .SingleOrDefault();
+            //var totalCount = (await countQuery
+            //    .SelectRaw("MAX(RowNumber)")
+            //    .GetAsync<int>())
+            //    .SingleOrDefault();
 
-            if (totalCount == 0) return new Connection<T>();
+            //if (totalCount == 0) return new Connection<T>();
 
             if (!xQuery.Clauses.Any(q => q.Component == "select")) xQuery.Select("*");
-
+            
             var statement = xQuery.Compiler.Compile(
                 xQuery.Slice(
                     context.After?.FromCursor().ToString(),
@@ -143,10 +145,22 @@ namespace Boerman.GraphQL.Contrib
             // Some custom mapping logic. Until the `RowNumber` field is found, all fields are considered
             // to be part of `T`. This methodology works because the last field selected is in fact the
             // `RowNumber` field (through the Slice function).
+            //var dictionary = xQuery.Connection.Query(
+            //    sql: statement.Sql,
+            //    param: statement.NamedBindings,
+            //    map: (T t, long i) => new KeyValuePair<long, T>(i, t),
+            //    splitOn: "RowNumber")
+            //    .ToDictionary(q => q.Key, q => q.Value);
+
+            var totalCount = 0;
+
             var dictionary = xQuery.Connection.Query(
                 sql: statement.Sql,
                 param: statement.NamedBindings,
-                map: (T t, long i) => new KeyValuePair<long, T>(i, t),
+                map: (T t, (long rowNumber, long rowCount) meta) => {
+                    totalCount = (int)meta.rowCount;
+                    return new KeyValuePair<long, T>(meta.rowNumber, t);
+                },
                 splitOn: "RowNumber")
                 .ToDictionary(q => q.Key, q => q.Value);
 
