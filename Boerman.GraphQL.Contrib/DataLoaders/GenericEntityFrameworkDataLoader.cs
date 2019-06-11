@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ namespace Boerman.GraphQL.Contrib.DataLoaders
             if (value == null) return default;
 
             var loader = dataLoader.Context.GetOrAddBatchLoader<TValue, T>(
-                $"{typeof(T).Name}-{predicate.ToString()}",
+                $"{Activity.Current.Id}-{typeof(T).Name}-{predicate.ToString()}",
                 async (items) =>
                 {
                     return await dbSet
@@ -79,7 +80,7 @@ namespace Boerman.GraphQL.Contrib.DataLoaders
             if (value == null) return default;
 
             var loader = dataLoader.Context.GetOrAddCollectionBatchLoader<TValue, T>(
-                $"{typeof(T).Name}-{predicate.ToString()}",
+                $"{Activity.Current.Id}-{typeof(T).Name}-{predicate.ToString()}",
                 (items) =>
                 {
                     var compiledPredicate = predicate.Compile();
