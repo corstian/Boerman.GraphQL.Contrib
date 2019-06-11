@@ -52,43 +52,6 @@ namespace Boerman.GraphQL.Contrib.DataLoaders
         /// <typeparam name="T">The type to retrieve from the DbSet</typeparam>
         /// <typeparam name="TValue">The value to filter on</typeparam>
         /// <param name="dataLoader">A dataloader to use</param>
-        /// <param name="dbSetAccessor">A function which can be invoked in order to retrieve a DbSet instance</param>
-        /// <param name="predicate">The predicate to select a key to filter on</param>
-        /// <param name="value">Value to filter items on</param>
-        /// <returns>T as specified by the predicate and TValue</returns>
-        public static async Task<T> EntityLoader<T, TValue>(
-            this IDataLoaderContextAccessor dataLoader,
-            Func<DbSet<T>> dbSetAccessor,
-            Expression<Func<T, TValue>> predicate,
-            TValue value)
-            where T : class
-        {
-            if (value == null) return default;
-
-            var loader = dataLoader.Context.GetOrAddBatchLoader<TValue, T>(
-                $"{typeof(T).Name}-{predicate.ToString()}",
-                async (items) =>
-                {
-                    var dbSet = dbSetAccessor.Invoke();
-
-                    return await dbSet
-                        .AsNoTracking()
-                        .Where(items
-                            .ToList()
-                            .MatchOn(predicate))
-                        .ToDictionaryAsync(predicate.Compile());
-                });
-
-            var task = loader.LoadAsync(value);
-            return await task;
-        }
-
-        /// <summary>
-        /// Register a dataloader for T by the predicate provided.
-        /// </summary>
-        /// <typeparam name="T">The type to retrieve from the DbSet</typeparam>
-        /// <typeparam name="TValue">The value to filter on</typeparam>
-        /// <param name="dataLoader">A dataloader to use</param>
         /// <param name="queryableAccessor">A function which can be invoked in order to retrieve an IQueryable instance</param>
         /// <param name="predicate">The predicate to select a key to filter on</param>
         /// <param name="value">Value to filter items on</param>
@@ -130,6 +93,7 @@ namespace Boerman.GraphQL.Contrib.DataLoaders
         /// <param name="predicate">The predicate to select a key to filter on</param>
         /// <param name="value">Value to filter items on</param>
         /// <returns>IEnumerable<T> as specified by the predicate and TValue</returns>
+        [Obsolete]
         public static async Task<IEnumerable<T>> EntityCollectionLoader<T, TValue>(
             this IDataLoaderContextAccessor dataLoader,
             DbSet<T> dbSet,
