@@ -109,29 +109,14 @@ namespace Boerman.GraphQL.Contrib
         public static async Task<Connection<T>> ToConnection<T, TSource>(
             this Query query,
             ResolveConnectionContext<TSource> context,
-            Func<T, string> cursorSelector,
-            string cursorField = "Id")
+            Func<T, string> cursorSelector)
             where T : class
             where TSource : class
         {
             var xQuery = query as XQuery;
 
             if (xQuery == null) throw new ArgumentException("Make sure the query object is instantiated from a queryFactory", nameof(query));
-
-            //var countQuery = xQuery.Clone();
-
-            //countQuery
-            //    .Clauses
-            //    .RemoveAll(q => q.Component == "select"
-            //                 || q.Component == "order");
-
-            //var totalCount = (await countQuery
-            //    .SelectRaw("MAX(RowNumber)")
-            //    .GetAsync<int>())
-            //    .SingleOrDefault();
-
-            //if (totalCount == 0) return new Connection<T>();
-
+            
             if (!xQuery.Clauses.Any(q => q.Component == "select")) xQuery.Select("*");
             
             var statement = xQuery.Compiler.Compile(
@@ -144,13 +129,6 @@ namespace Boerman.GraphQL.Contrib
             // Some custom mapping logic. Until the `RowNumber` field is found, all fields are considered
             // to be part of `T`. This methodology works because the last field selected is in fact the
             // `RowNumber` field (through the Slice function).
-            //var dictionary = xQuery.Connection.Query(
-            //    sql: statement.Sql,
-            //    param: statement.NamedBindings,
-            //    map: (T t, long i) => new KeyValuePair<long, T>(i, t),
-            //    splitOn: "RowNumber")
-            //    .ToDictionary(q => q.Key, q => q.Value);
-
             var totalCount = 0;
 
             var dictionary = xQuery.Connection.Query(
@@ -190,14 +168,13 @@ namespace Boerman.GraphQL.Contrib
 
         public static async Task<Connection<T>> ToConnection<T, TSource>(
             this Query query,
-            ResolveConnectionContext<TSource> context,
-            string cursorField = "Id")
+            ResolveConnectionContext<TSource> context)
             where T : class, IId
             where TSource : class
         {
             return await query.ToConnection<T, TSource>(context, q => q.Id.ToCursor());
         }
-        
+
         public static Query LeftJoinAs(this Query query, string table, string alias, string first, string second, string op = "=")
         {
             return query.LeftJoin(new Query(table).As(alias), q => q.On(first, second, op));
