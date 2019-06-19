@@ -145,13 +145,13 @@ namespace Boerman.GraphQL.Contrib
 
             var connection = new Connection<T>
             {
-                Edges = dictionary
+                Edges = dictionary?
                     .Select(q => new Edge<T>
                     {
                         Node = q.Value,
                         Cursor = cursorSelector.Invoke(q.Value)
                     })
-                    .ToList(),
+                    .ToList() ?? new List<Edge<T>>(),
                 TotalCount = totalCount,
                 PageInfo = new PageInfo
                 {
