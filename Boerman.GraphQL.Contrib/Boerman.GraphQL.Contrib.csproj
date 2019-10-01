@@ -8,9 +8,9 @@
     <Description>Library containing some helper methods for GraphQL apis. Includes data-loaders and (cursor based) pagination helper methods.</Description>
     <RepositoryUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</RepositoryUrl>
     <PackageProjectUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</PackageProjectUrl>
-    <PackageReleaseNotes>Return empty objects within the connection instead of no objects</PackageReleaseNotes>
-    <Version>1.0.5</Version>
-    <AssemblyVersion>1.0.5.0</AssemblyVersion>
+    <PackageReleaseNotes>Add cursor extensions</PackageReleaseNotes>
+    <Version>1.0.6</Version>
+    <AssemblyVersion>1.0.6.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
