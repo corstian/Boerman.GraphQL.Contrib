@@ -9,8 +9,8 @@
     <RepositoryUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</RepositoryUrl>
     <PackageProjectUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</PackageProjectUrl>
     <PackageReleaseNotes>Add cursor extensions</PackageReleaseNotes>
-    <Version>1.0.6</Version>
-    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+    <Version>1.0.7</Version>
+    <AssemblyVersion>1.0.7.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
