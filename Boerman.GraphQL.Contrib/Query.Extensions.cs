@@ -106,6 +106,86 @@ namespace Boerman.GraphQL.Contrib
             return internalQuery;
         }
 
+        public static async Task<Connection<T>> ToConnection<T, TSource, TCursor>(
+            this Query query,
+            ResolveConnectionContext<TSource> context,
+            Func<T, string> cursorEncoder,
+            Func<string, TCursor> cursorDecoder)
+            where T : class
+            where TSource : class
+        {
+            var xQuery = query as XQuery;
+
+            if (xQuery == null) throw new ArgumentException("Make sure the query object is instantiated from a queryFactory", nameof(query));
+
+            if (!xQuery.Clauses.Any(q => q.Component == "select")) xQuery.Select("*");
+
+            var after = context.After != null
+                ? cursorDecoder.Invoke(context.After).ToString()
+                : null;
+
+            var before = context.Before != null
+                ? cursorDecoder.Invoke(context.Before).ToString()
+                : null;
+
+            var statement = xQuery.Compiler.Compile(
+                xQuery.Slice(
+                    after,
+                    context.First.GetValueOrDefault(0),
+                    before,
+                    context.Last.GetValueOrDefault(0)));
+
+            // Some custom mapping logic. Until the `RowNumber` field is found, all fields are considered
+            // to be part of `T`. This methodology works because the last field selected is in fact the
+            // `RowNumber` field (through the Slice function).
+            var totalCount = 0;
+
+            var dictionary = xQuery.Connection.Query(
+                sql: statement.Sql,
+                param: statement.NamedBindings,
+                map: (T t, (long rowNumber, long rowCount) meta) => {
+                    totalCount = (int)meta.rowCount;
+                    return new KeyValuePair<long, T>(meta.rowNumber, t);
+                },
+                splitOn: "RowNumber")
+                .ToDictionary(q => q.Key, q => q.Value);
+
+            if (!dictionary.Any()) return new Connection<T>
+            {
+                Edges = new List<Edge<T>>(),
+                TotalCount = 0,
+                PageInfo = new PageInfo
+                {
+                    EndCursor = "",
+                    HasNextPage = false,
+                    HasPreviousPage = false,
+                    StartCursor = ""
+                }
+            };
+
+            var connection = new Connection<T>
+            {
+                Edges = dictionary?
+                    .Select(q => new Edge<T>
+                    {
+                        Node = q.Value,
+                        Cursor = cursorSelector.Invoke(q.Value)
+                    })
+                    .ToList() ?? new List<Edge<T>>(),
+                TotalCount = totalCount,
+                PageInfo = new PageInfo
+                {
+                    HasPreviousPage = dictionary.First().Key > 1,
+                    HasNextPage = dictionary.Last().Key < totalCount
+                }
+            };
+
+            connection.PageInfo.StartCursor = connection.Edges.First().Cursor;
+            connection.PageInfo.EndCursor = connection.Edges.Last().Cursor;
+
+            return connection;
+        }
+
         public static async Task<Connection<T>> ToConnection<T, TSource>(
             this Query query,
             ResolveConnectionContext<TSource> context,
