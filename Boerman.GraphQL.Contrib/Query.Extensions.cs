@@ -141,7 +141,18 @@ namespace Boerman.GraphQL.Contrib
                 splitOn: "RowNumber")
                 .ToDictionary(q => q.Key, q => q.Value);
 
-            if (!dictionary.Any()) return new Connection<T>();
+            if (!dictionary.Any()) return new Connection<T>
+            {
+                Edges = new List<Edge<T>>(),
+                TotalCount = 0,
+                PageInfo = new PageInfo
+                {
+                    EndCursor = "",
+                    HasNextPage = false,
+                    HasPreviousPage = false,
+                    StartCursor = ""
+                }
+            };
 
             var connection = new Connection<T>
             {
