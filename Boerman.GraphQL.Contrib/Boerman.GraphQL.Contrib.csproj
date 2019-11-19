@@ -8,9 +8,8 @@
     <Description>Library containing some helper methods for GraphQL apis. Includes data-loaders and (cursor based) pagination helper methods.</Description>
     <RepositoryUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</RepositoryUrl>
     <PackageProjectUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</PackageProjectUrl>
-    <PackageReleaseNotes>Add cursor extensions</PackageReleaseNotes>
-    <Version>1.0.7</Version>
-    <AssemblyVersion>1.0.7.0</AssemblyVersion>
+    <PackageReleaseNotes>Add an activity id to the load key in order to be able to separate multiple requests from each other.</PackageReleaseNotes>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

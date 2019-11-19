@@ -186,6 +186,73 @@ namespace Boerman.GraphQL.Contrib
             return await query.ToConnection<T, TSource>(context, q => q.Id.ToCursor());
         }
 
+        /// <summary>
+        /// This is an extension to create a connection out of an list. Take into consideration that slicing the list will happen in-memory,
+        /// and that this method currently only supports unidirectional slicing.
+        /// </summary>
+        /// <typeparam name="TEdge"></typeparam>
+        /// <typeparam name="TContext"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="context"></param>
+        /// <param name="cursor"></param>
+        /// <returns></returns>
+        public static Connection<TEdge> ToConnection<TEdge, TContext>(
+            this IList<TEdge> data,
+            ResolveConnectionContext<TContext> context,
+            Func<TEdge, string> cursor)
+        {
+            var totalCount = data.Count();
+
+            var hasPreviousPage = false;
+            var hasNextPage = false;
+
+            var itemsToTake = context.First ?? context.PageSize ?? 20;
+
+            if (!string.IsNullOrWhiteSpace(context.After)
+                && data.Any(q => cursor.Invoke(q) == context.After))
+            {
+                data = data
+                    .SkipWhile(q => cursor.Invoke(q) != context.After)
+                    .Skip(1)
+                    .ToList();
+
+                if (itemsToTake < data.Count()) hasNextPage = true;
+
+                data = data
+                    .Take(itemsToTake)
+                    .ToList();
+            }
+            else
+            {
+                if (itemsToTake < data.Count()) hasNextPage = true;
+
+                data = data.Take(itemsToTake).ToList();
+            }
+
+            var edges = data.Select(item => new Edge<TEdge>
+            {
+                Node = item,
+                Cursor = cursor.Invoke(item)
+            })
+            .ToList();
+
+            var firstEdge = edges.FirstOrDefault();
+            var lastEdge = edges.LastOrDefault();
+
+            return new Connection<TEdge>
+            {
+                Edges = edges,
+                TotalCount = totalCount,
+                PageInfo = new PageInfo
+                {
+                    StartCursor = firstEdge?.Cursor,
+                    EndCursor = lastEdge?.Cursor,
+                    HasPreviousPage = hasPreviousPage,
+                    HasNextPage = hasNextPage,
+                }
+            };
+        }
+
         public static Query LeftJoinAs(this Query query, string table, string alias, string first, string second, string op = "=")
         {
             return query.LeftJoin(new Query(table).As(alias), q => q.On(first, second, op));
