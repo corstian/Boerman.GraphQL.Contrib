@@ -13,7 +13,7 @@ namespace SkyHop.Hosting.Graph.Modules.Authorization
                 .AddHttpContextAccessor()
                 .AddTransient<IOperationMessageListener, SubscriptionPrincipalInitializer>()
                 .AddTransient<IValidationRule, PolicyValidationRule>()
-                .AddAuthorization();
+                .AddAuthorizationCore();
 
             return builder;
         }
