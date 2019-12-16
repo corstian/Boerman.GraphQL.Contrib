@@ -10,6 +10,7 @@ The main reason to use this library are the following methods:
 - `ToConnection()` - An extension method to the `Query` object which applies pagination (using the `Slice` method) and returns a `Connection` object.
 - `EntityLoader()` - An extension method on the `IDataLoaderContextAccessor` to retrieve a single value via the data-loader based on a LINQ predicate. The loader will combine all similiar requests.
 - `EntityCollectionLoader()` - An extension method on the `IDataLoaderContextAccessor` to retrieve multiple values based on a LINQ predicate. The loader will combine all similiar requests.
+- A more natural way to add authorization to queries. [A detailed blog post explaining this functionality is available here](https://corstianboerman.com/2019-12-16/graphql-dotnet-authorization.html).
 
 ## Usage
 
