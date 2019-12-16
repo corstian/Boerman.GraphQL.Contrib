@@ -1,28 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Corstian Boerman</Authors>
     <Company>The Boerman Company</Company>
     <Description>Library containing some helper methods for GraphQL apis. Includes data-loaders and (cursor based) pagination helper methods.</Description>
     <RepositoryUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</RepositoryUrl>
     <PackageProjectUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</PackageProjectUrl>
-    <PackageReleaseNotes>Add an activity id to the load key in order to be able to separate multiple requests from each other.</PackageReleaseNotes>
-    <Version>1.1.0</Version>
+    <PackageReleaseNotes>Update all dependencies to asp.net core 3, target netstandard 2.1 and there are new authorziation helpers!</PackageReleaseNotes>
+    <Version>2.0.0</Version>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <Compile Remove="DataLoaders\LazyDataLoader.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GraphQL" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="GraphQL" Version="3.0.0-preview-1356" />
+    <PackageReference Include="GraphQL.Server.Core" Version="3.5.0-alpha0038" />
+    <PackageReference Include="GraphQL.Server.Transports.Subscriptions.Abstractions" Version="3.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.1" />
     <PackageReference Include="SqlKata.Execution" Version="1.1.7" />
   </ItemGroup>
 
