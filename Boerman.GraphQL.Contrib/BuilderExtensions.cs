@@ -3,7 +3,7 @@ using GraphQL.Server.Transports.Subscriptions.Abstractions;
 using GraphQL.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace SkyHop.Hosting.Graph.Modules.Authorization
+namespace Boerman.GraphQL.Contrib
 {
     public static class BuilderExtensions
     {
