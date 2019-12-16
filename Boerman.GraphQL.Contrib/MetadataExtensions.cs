@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Linq;
 
-namespace SkyHop.Hosting.Graph.Modules.Authorization
+namespace Boerman.GraphQL.Contrib
 {
     public static class MetadataExtensions
     {
@@ -35,7 +35,7 @@ namespace SkyHop.Hosting.Graph.Modules.Authorization
             Action<AuthorizationPolicyBuilder> policy)
         {
             builder.FieldType.WithPolicy(policy);
-            
+
             return builder;
         }
 

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using INode = GraphQL.Language.AST.INode;
 using OperationType = GraphQL.Language.AST.OperationType;
 
-namespace SkyHop.Hosting.Graph.Modules.Authorization
+namespace Boerman.GraphQL.Contrib
 {
     public class PolicyValidationRule : IValidationRule
     {
@@ -105,7 +105,7 @@ namespace SkyHop.Hosting.Graph.Modules.Authorization
 
         private static void AppendFailureLine(
             StringBuilder stringBuilder,
-            Microsoft.AspNetCore.Authorization.IAuthorizationRequirement authorizationRequirement)
+            IAuthorizationRequirement authorizationRequirement)
         {
             switch (authorizationRequirement)
             {

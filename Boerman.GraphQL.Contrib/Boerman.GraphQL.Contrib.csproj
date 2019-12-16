@@ -8,8 +8,8 @@
     <Description>Library containing some helper methods for GraphQL apis. Includes data-loaders and (cursor based) pagination helper methods.</Description>
     <RepositoryUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</RepositoryUrl>
     <PackageProjectUrl>https://github.com/corstian/Boerman.GraphQL.Contrib</PackageProjectUrl>
-    <PackageReleaseNotes>Update all dependencies to asp.net core 3, target netstandard 2.1 and there are new authorziation helpers!</PackageReleaseNotes>
-    <Version>2.0.0-preview1</Version>
+    <PackageReleaseNotes>Update namespaces :')</PackageReleaseNotes>
+    <Version>2.0.0-preview2</Version>
   </PropertyGroup>
   
   <ItemGroup>
